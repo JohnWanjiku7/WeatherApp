@@ -1,34 +1,4 @@
-﻿//using System;
-
-//using WeatherApp.Pdf;
-
-//class Program
-//{
-//    static async Task Main(string[] args)
-//    {
-
-
-//        //string accessKey = "8d161fc321e3512d721372456182b3a8";
-//        //string query = "Nairobi";
-//        //// Initialize weather service through dependency injection
-//        //IWeatherDataService weatherDataService = new WeatherDataService(accessKey);
-//        //WeatherResponse weatherResponse = await weatherDataService.GetWeatherDataAsync(query);
-//        //if (weatherResponse != null)
-//        //{
-//        //    string outputPath = "WeatherReport2.pdf";
-
-//        //    // Initialize PDF generator through dependency injection
-//        //    IPdfGenerator pdfGenerator = new PdfGenerator();
-//        //    pdfGenerator.GeneratePdf(weatherResponse, outputPath);
-
-//        //}
-//        //else
-//        //{
-//        //    Console.WriteLine("Unable to fetch weather data.");
-//        //}
-
-//    }
-//}
+﻿
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using WeatherApp.Application.Services;
@@ -53,14 +23,30 @@ namespace WeatherApp.ConsoleUI
             {
                 Console.Write("Enter a location (e.g., 'Nairobi'): ");
                 string locationName = Console.ReadLine();
-                 //locationName = "Nairobi";
-               
+                //locationName = "Nairobi";
+              
                 if (string.IsNullOrWhiteSpace(locationName))
                 {
                     Console.WriteLine("Please enter a valid location name.");
                     continue;
                 }
+                string fileName = "WeatherReport.pdf";
+                Console.Write("Enter the preffered name of the output document (e.g., 'WeatherReport'):");
+                fileName = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(fileName))
+                {
+                    Console.WriteLine("Please enter a valid file name.");
+                    continue;
+                }
+                else
+                {
+                    if (!fileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+                    {
+                        fileName += ".pdf"; // Append ".pdf" if it's not already there
+                    }
 
+                   
+                }
                 try
                 {
                     // Initialize the use case with the WeatherDataService dependency
@@ -71,24 +57,25 @@ namespace WeatherApp.ConsoleUI
 
                     if (weatherData != null)
                     {
-                        // Display the weather data on the console
-                        Console.WriteLine("\nWeather Data:");
-                        Console.WriteLine($"Location: {weatherData.Location.name}");
-                        Console.WriteLine($"Observation Time: {weatherData.Current.ObservationTime}");
-                        Console.WriteLine($"Temperature: {weatherData.Current.Temperature}°C");
-                        Console.WriteLine($"Weather Description: {weatherData.Current.WeatherDescriptions[0]}");
-                        Console.WriteLine($"Wind Speed: {weatherData.Current.WindSpeed} km/h");
-                        Console.WriteLine($"Wind Direction: {weatherData.Current.WindDir}");
-                        Console.WriteLine($"Pressure: {weatherData.Current.Pressure} hPa");
-                        Console.WriteLine($"Humidity: {weatherData.Current.Humidity}%");
-                        Console.WriteLine($"Cloudcover: {weatherData.Current.Cloudcover}%");
-                        Console.WriteLine($"Feels Like: {weatherData.Current.Feelslike}°C");
-                        Console.WriteLine($"UV Index: {weatherData.Current.UVIndex}");
-                        Console.WriteLine($"Visibility: {weatherData.Current.Visibility} km");
-                        Console.WriteLine($"Is Day: {weatherData.Current.IsDay}");
+                        //// Display the weather data on the console
+                        //Console.WriteLine("\nWeather Data:");
+                        //Console.WriteLine($"Location: {weatherData.Location.name}");
+                        //Console.WriteLine($"Observation Time: {weatherData.Current.ObservationTime}");
+                        //Console.WriteLine($"Temperature: {weatherData.Current.Temperature}°C");
+                        //Console.WriteLine($"Weather Description: {weatherData.Current.WeatherDescriptions[0]}");
+                        //Console.WriteLine($"Wind Speed: {weatherData.Current.WindSpeed} km/h");
+                        //Console.WriteLine($"Wind Direction: {weatherData.Current.WindDir}");
+                        //Console.WriteLine($"Pressure: {weatherData.Current.Pressure} hPa");
+                        //Console.WriteLine($"Humidity: {weatherData.Current.Humidity}%");
+                        //Console.WriteLine($"Cloudcover: {weatherData.Current.Cloudcover}%");
+                        //Console.WriteLine($"Feels Like: {weatherData.Current.Feelslike}°C");
+                        //Console.WriteLine($"UV Index: {weatherData.Current.UVIndex}");
+                        //Console.WriteLine($"Visibility: {weatherData.Current.Visibility} km");
+                        //Console.WriteLine($"Is Day: {weatherData.Current.IsDay}");
                         IPdfGenerator pdfGenerator = new PdfGenerator();
-                        string outputPath = "WeatherReport.pdf";
-                        pdfGenerator.GeneratePdf(weatherData, outputPath);
+                      
+                        string result = pdfGenerator.GeneratePdf(weatherData, fileName);
+                        Console.WriteLine(result);
                         Console.WriteLine("\nPress Enter to continue or 'Q' to quit.");
                         var key = Console.ReadKey();
                         
