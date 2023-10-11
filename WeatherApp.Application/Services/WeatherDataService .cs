@@ -32,7 +32,7 @@ namespace WeatherApp.Application.Services
             string apiKey = (configuration["WeatherApi:ApiKey"]);
             string apiUrl = (configuration["WeatherApi:EndpointUrl"]);
 
-            //_httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+         
             _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
             _apiUrl = apiUrl ?? throw new ArgumentNullException(nameof(apiUrl));
         }
@@ -61,7 +61,7 @@ namespace WeatherApp.Application.Services
                     // Deserialize the JSON response into a WeatherResponse object
                     WeatherResponse weatherResponse = JsonConvert.DeserializeObject<WeatherResponse>(responseBody);
 
-                    // Extract and return the relevant WeatherData
+                    // Return the relevant WeatherData
                     return weatherResponse;
                 }
                 else

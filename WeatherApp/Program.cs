@@ -46,33 +46,7 @@ namespace WeatherApp.ConsoleUI
         static async Task Main(string[] args)
 
         {
-            //string accessKey;
-            //string apiUrl;
-            //try
-            //{
-
-            //    var serviceCollection = new ServiceCollection();
-
-            //    IConfiguration configuration;
-            //    configuration =  new ConfigurationBuilder()
-            //        .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
-            //        .AddJsonFile("appsettings.json")
-            //        .Build();
-               
-               
-                
-            //    serviceCollection.AddSingleton<IConfiguration>(configuration);
-
-            //    accessKey = (configuration["WeatherApi:ApiKey"]);
-            //    apiUrl =(configuration["WeatherApi:EndpointUrl"]);
-
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    // Handle any configuration loading errors here
-            //    Console.WriteLine($"Error loading configuration: {ex.Message}");
-            //}
+            
             Console.WriteLine("Welcome to the WeatherApp Console UI!");
 
             while (true)
