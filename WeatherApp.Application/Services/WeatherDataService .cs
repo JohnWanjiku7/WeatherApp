@@ -10,7 +10,7 @@ namespace WeatherApp.Application.Services
 {
     public class WeatherDataService : IWeatherDataService
     {
-        //private readonly HttpClient _httpClient;
+       
         private readonly string _apiKey;
         private readonly string _apiUrl;
 
