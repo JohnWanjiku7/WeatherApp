@@ -1,34 +1,4 @@
-﻿//using System;
-
-//using WeatherApp.Pdf;
-
-//class Program
-//{
-//    static async Task Main(string[] args)
-//    {
-
-
-//        //string accessKey = "8d161fc321e3512d721372456182b3a8";
-//        //string query = "Nairobi";
-//        //// Initialize weather service through dependency injection
-//        //IWeatherDataService weatherDataService = new WeatherDataService(accessKey);
-//        //WeatherResponse weatherResponse = await weatherDataService.GetWeatherDataAsync(query);
-//        //if (weatherResponse != null)
-//        //{
-//        //    string outputPath = "WeatherReport2.pdf";
-
-//        //    // Initialize PDF generator through dependency injection
-//        //    IPdfGenerator pdfGenerator = new PdfGenerator();
-//        //    pdfGenerator.GeneratePdf(weatherResponse, outputPath);
-
-//        //}
-//        //else
-//        //{
-//        //    Console.WriteLine("Unable to fetch weather data.");
-//        //}
-
-//    }
-//}
+﻿
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using WeatherApp.Application.Services;
