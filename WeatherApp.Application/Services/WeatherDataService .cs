@@ -29,12 +29,10 @@ namespace WeatherApp.Application.Services
 
             serviceCollection.AddSingleton<IConfiguration>(configuration);
 
-            string apiKey = (configuration["WeatherApi:ApiKey"]);
-            string apiUrl = (configuration["WeatherApi:EndpointUrl"]);
+          
 
-         
-            _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
-            _apiUrl = apiUrl ?? throw new ArgumentNullException(nameof(apiUrl));
+            _apiKey = configuration["WeatherApi:ApiKey"] ?? throw new ArgumentNullException("ApiKey is missing in appsettings.json");
+            _apiUrl = configuration["WeatherApi:EndpointUrl"] ?? throw new ArgumentNullException("EndpointUrl is missing in appsettings.json");
         }
 
         public async Task<WeatherResponse> GetWeatherDataAsync(string locationName)
