@@ -6,7 +6,7 @@ This project uses an API key for accessing external services. To get started, yo
 ## Getting Started
 
 1. Clone this repository to your local machine:
-   git clone https://github.com/your-username/your-repo.git
+   git clone https://github.com/JohnWanjiku7/WeatherApp.git
 
 2. Navigate to the project directory:
 3. Locate the `appsettings.json` file in the project directory.
