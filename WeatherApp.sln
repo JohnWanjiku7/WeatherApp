@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherApp", "WeatherApp\WeatherApp.csproj", "{B3695C36-5768-4434-96C0-64F83B26C136}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApp", "WeatherApp\WeatherApp.csproj", "{B3695C36-5768-4434-96C0-64F83B26C136}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherApp.Pdf", "WeatherApp.Pdf\WeatherApp.Pdf.csproj", "{59C13A6C-41B5-4CF6-894C-FB4B0D558A2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApp.Pdf", "WeatherApp.Pdf\WeatherApp.Pdf.csproj", "{59C13A6C-41B5-4CF6-894C-FB4B0D558A2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherApp.Application", "WeatherApp.Application\WeatherApp.Application.csproj", "{A2179851-8AC2-4F9E-A404-06E2EF83844E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApp.Application", "WeatherApp.Application\WeatherApp.Application.csproj", "{A2179851-8AC2-4F9E-A404-06E2EF83844E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherApp.Domain", "WeatherApp.Domain\WeatherApp.Domain.csproj", "{13DEEFDC-E8F8-4AA0-90E3-88D33C17B704}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApp.Domain", "WeatherApp.Domain\WeatherApp.Domain.csproj", "{13DEEFDC-E8F8-4AA0-90E3-88D33C17B704}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
