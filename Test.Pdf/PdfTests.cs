@@ -62,8 +62,10 @@ namespace WeatherApp.Tests
 
             var fileName = "TestReport.pdf";
             var outputPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName);
-         
+            var pdfGenerator = new PdfGenerator();
 
+            // Act
+            string result = pdfGenerator.GeneratePdf(weatherResponse, fileName);
 
             // Assert
             Assert.IsTrue(File.Exists(outputPath));
