@@ -1,4 +1,6 @@
-﻿using System;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,8 +33,10 @@ namespace WeatherApp.Pdf
                 PdfWriter.GetInstance(document, new FileStream(outputPath, FileMode.Create));
 
                 document.Open();
-                AddTitle(document, weatherResponse);
-                AddWeatherData(document, weatherResponse);
+                var title = AddTitle(weatherResponse);
+                document.Add(title);
+                PdfPTable table = AddWeatherData( weatherResponse);
+                document.Add(table);
                 document.Close();
 
                 return $"PDF created at: {Path.GetFullPath(outputPath)}";
@@ -43,69 +47,126 @@ namespace WeatherApp.Pdf
             }
         }
 
-        private void AddTitle(Document document, WeatherResponse weatherResponse)
+        public Paragraph AddTitle( WeatherResponse weatherResponse)
         {
             StringBuilder titleBuilder = new StringBuilder($"Weather Report for {weatherResponse.Location.name} {weatherResponse.Location.region}\nAs At {weatherResponse.Location.localtime}");
             var title = new Paragraph(titleBuilder.ToString(), new Font(Font.FontFamily.HELVETICA, 24, Font.BOLD, BaseColor.BLACK));
             title.Alignment = Element.ALIGN_CENTER;
             title.SpacingAfter = 10f;
-            document.Add(title);
+            return title; ;
         }
 
-        private void AddWeatherData(Document document, WeatherResponse weatherResponse)
+        public PdfPTable AddWeatherData( WeatherResponse weatherResponse)
         {
             PdfPTable table = new PdfPTable(2)
             {
                 DefaultCell = { Border = Rectangle.NO_BORDER },
                 WidthPercentage = 80
             };
+                title.SpacingAfter = 10f;
+                document.Add(title);
 
-            foreach (var prop in weatherResponse.Current.GetType().GetProperties())
-            {
-                string propertyName = prop.Name;
-                var propertyValue = prop.GetValue(weatherResponse.Current);
+                // Add content to the PDF
+                PdfPTable table = new PdfPTable(2);
+                table.DefaultCell.Border = Rectangle.NO_BORDER;
+                table.WidthPercentage = 80;
+                title.SpacingAfter = 10f;
+                document.Add(title);
 
-                if (propertyValue == null) continue;
-
-                var attribute = (DisplayAttribute)Attribute.GetCustomAttribute(prop, typeof(DisplayAttribute));
-                propertyName = attribute?.Name ?? propertyName;
-
+                // Add content to the PDF
                 PdfPCell nameCell = new PdfPCell(new Phrase(propertyName, new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
-                
-                    nameCell.BackgroundColor = BaseColor.LIGHT_GRAY;
-                    nameCell.Padding = 8;
-             
+
+                nameCell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                nameCell.Padding = 8;
+
 
                 PdfPCell valueCell = new PdfPCell(new Phrase(propertyValue.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
 
 
+                valueCell.BackgroundColor = BaseColor.WHITE;
+                valueCell.Padding = 8;
+
+                    PdfPCell valueCell = new PdfPCell(new Phrase(propertyValue.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    // Add colors and padding to cells for a modern design
+                    nameCell.BackgroundColor = BaseColor.LIGHT_GRAY;
                     valueCell.BackgroundColor = BaseColor.WHITE;
+                    nameCell.Padding = 8;
                     valueCell.Padding = 8;
-               
 
-                if ((propertyName == "WeatherIcons" || propertyName == "Weather icon") && propertyValue is System.Collections.IList iconList && iconList.Count > 0)
-                {
-                    byte[] imageData = DownloadImage(iconList[0].ToString());
-                    if (imageData != null)
-                    {
-                        var image = iTextSharp.text.Image.GetInstance(imageData);
-                        valueCell = new PdfPCell(image, true);
-                    }
-                }
+                    PdfPCell valueCell = new PdfPCell(new Phrase(propertyValue.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    // Add colors and padding to cells for a modern design
+                    nameCell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                    valueCell.BackgroundColor = BaseColor.WHITE;
+                    nameCell.Padding = 8;
+                    valueCell.Padding = 8;
 
-                if ((propertyName == "WeatherDescriptions" || propertyName == "Weather Description") && propertyValue is System.Collections.IList descriptionList && descriptionList.Count > 0)
-                {
-                    valueCell = new PdfPCell(new Phrase(descriptionList[0].ToString()));
-                }
-
+                    PdfPCell valueCell = new PdfPCell(new Phrase(propertyValue.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+                    // Add colors and padding to cells for a modern design
                 table.AddCell(nameCell);
                 table.AddCell(valueCell);
             }
 
-            document.Add(table);
+            return table;
+        }
+                if ((propertyName == "WeatherIcons" || propertyName == "Weather icon") && propertyValue is System.Collections.IList iconList && iconList.Count > 0)
+        public byte[] DownloadImage(string imageUrl)
+                    table.AddCell(valueCell);
+                }
+
+                document.Add(table);
+            }
+            catch (Exception ex)
+            {
+                throw new PDFGeneratorExceptions("Error creating the PDF:", ex.Message);
+            }
+            finally
+            {
+                document.Close();
+            }
+
+            return $"PDF created at: {Path.GetFullPath(outputPath)}";
+            
+        }
+                    }
+        private static byte[] DownloadImage(string imageUrl)
+                    table.AddCell(valueCell);
+                }
+
+                document.Add(table);
+            }
+            catch (Exception ex)
+            {
+                throw new PDFGeneratorExceptions("Error creating the PDF:", ex.Message);
+            }
+            finally
+            {
+                document.Close();
+            }
+
+            return $"PDF created at: {Path.GetFullPath(outputPath)}";
+            
         }
 
-        private byte[] DownloadImage(string imageUrl)
+        private static byte[] DownloadImage(string imageUrl)
+                    table.AddCell(valueCell);
+                }
+
+                document.Add(table);
+            }
+            catch (Exception ex)
+            {
+                throw new PDFGeneratorExceptions("Error creating the PDF:", ex.Message);
+            }
+            finally
+            {
+                document.Close();
+            }
+
+            return $"PDF created at: {Path.GetFullPath(outputPath)}";
+            
+        }
+
+        private static byte[] DownloadImage(string imageUrl)
         {
             using (WebClient webClient = new WebClient())
             {
