@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Text;
-using NUnit.Framework;
 using WeatherApp.Domain.Entities;
 using WeatherApp.Pdf;
-using System.IO;
-using Org.BouncyCastle.Crypto;
-using iTextSharp.text.pdf.parser;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
 

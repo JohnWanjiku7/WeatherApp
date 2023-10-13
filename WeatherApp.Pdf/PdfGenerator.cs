@@ -1,176 +1,125 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
-using WeatherApp.Domain.Entities;
-using WeatherApp.Pdf;
 using System.IO;
-using Org.BouncyCastle.Crypto;
-using iTextSharp.text.pdf.parser;
-using iTextSharp.text.pdf;
+using System.Text;
+using System.Threading.Tasks;
+using System.Net;
+using System.Net.Http;
 using iTextSharp.text;
+using iTextSharp.text.pdf;
+using WeatherApp.Domain.Entities;
+using WeatherApp.Domain.Exceptions;
+using WeatherApp.Pdf.PDFExceptions;
+using System.ComponentModel.DataAnnotations;
 
-namespace WeatherApp.Tests
+namespace WeatherApp.Pdf
 {
-    [TestFixture]
-    public class PdfGeneratorTests
+    public class PdfGenerator : IPdfGenerator
     {
-        [Test]
-        public void GeneratePdf_GeneratesPdfFile()
+        public string GeneratePdf(WeatherResponse weatherResponse, string fileName)
         {
-            // Arrange
-            var weatherResponse = new WeatherResponse
+            try
             {
-                Location = new Location
+                if (string.IsNullOrWhiteSpace(fileName))
                 {
-                    name = "New York",
-                    country = "United States of America",
-                    region = "New York",
-                    lat = "40.714",
-                    lon = "-74.006",
-                    timezone_id = "America/New_York",
-                    localtime = "2019-09-07 08:14",
-                    localtime_epoch = 1567844040,
-                    utc_offset = "-4.0"
-                },
-                Current = new Current
+                    fileName = "WeatherReport2.pdf";
+                }
+
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string outputPath = Path.Combine(desktopPath, fileName);
+
+                Document document = new Document();
+                PdfWriter.GetInstance(document, new FileStream(outputPath, FileMode.Create));
+
+                document.Open();
+                var title = AddTitle(weatherResponse);
+                document.Add(title);
+                PdfPTable table = AddWeatherData(weatherResponse);
+                document.Add(table);
+                document.Close();
+
+                return $"PDF created at: {Path.GetFullPath(outputPath)}";
+            }
+            catch (Exception ex)
+            {
+                throw new PDFGeneratorExceptions("Error creating the PDF:", ex.Message);
+            }
+        }
+
+        public Paragraph AddTitle(WeatherResponse weatherResponse)
+        {
+            StringBuilder titleBuilder = new StringBuilder($"Weather Report for {weatherResponse.Location.name} {weatherResponse.Location.region}\nAs At {weatherResponse.Location.localtime}");
+            var title = new Paragraph(titleBuilder.ToString(), new Font(Font.FontFamily.HELVETICA, 24, Font.BOLD, BaseColor.BLACK));
+            title.Alignment = Element.ALIGN_CENTER;
+            title.SpacingAfter = 10f;
+            return title; ;
+        }
+
+        public PdfPTable AddWeatherData(WeatherResponse weatherResponse)
+        {
+            PdfPTable table = new PdfPTable(2)
+            {
+                DefaultCell = { Border = Rectangle.NO_BORDER },
+                WidthPercentage = 80
+            };
+
+            foreach (var prop in weatherResponse.Current.GetType().GetProperties())
+            {
+                string propertyName = prop.Name;
+                var propertyValue = prop.GetValue(weatherResponse.Current);
+
+                if (propertyValue == null) continue;
+
+                var attribute = (DisplayAttribute)Attribute.GetCustomAttribute(prop, typeof(DisplayAttribute));
+                propertyName = attribute?.Name ?? propertyName;
+
+                PdfPCell nameCell = new PdfPCell(new Phrase(propertyName, new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
+
+                nameCell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                nameCell.Padding = 8;
+
+
+                PdfPCell valueCell = new PdfPCell(new Phrase(propertyValue.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
+
+
+                valueCell.BackgroundColor = BaseColor.WHITE;
+                valueCell.Padding = 8;
+
+
+                if ((propertyName == "WeatherIcons" || propertyName == "Weather icon") && propertyValue is System.Collections.IList iconList && iconList.Count > 0)
                 {
-                    ObservationTime = "12:14 PM",
-                    Temperature = 13,
-                    WeatherCode = 113,
-                    WeatherIcons = new List<string>
+                    byte[] imageData = DownloadImage(iconList[0].ToString());
+                    if (imageData != null)
                     {
-                        "https://cdn.worldweatheronline.com/images/wsymbols01_png_64/wsymbol_0002_sunny_intervals.png"
-                    },
-                    WeatherDescriptions = new List<string>
-                    {
-                        "Sunny"
-                    },
-                    WindSpeed = 0,
-                    WindDegree = 349,
-                    WindDir = "N",
-                    Pressure = 1010,
-                    Precip = 0,
-                    Humidity = 90,
-                    Cloudcover = 0,
-                    Feelslike = 13,
-                    UVIndex = 4,
-                    Visibility = 16,
-                    IsDay = "Yes"
+                        var image = iTextSharp.text.Image.GetInstance(imageData);
+                        valueCell = new PdfPCell(image, true);
+                    }
                 }
-            };
 
-            var fileName = "TestReport.pdf";
-            var outputPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName);
-
-
-
-            // Assert
-            Assert.IsTrue(File.Exists(outputPath));
-            // You can add more assertions here to validate the content of the generated PDF if needed
-        }
-
-        [Test]
-        public void DownloadImage_DownloadsImage()
-        {
-            // Arrange
-            var imageUrl = "https://cdn.worldweatheronline.com/images/wsymbols01_png_64/wsymbol_0002_sunny_intervals.png";
-            PdfGenerator pdfGenerator = new PdfGenerator();
-
-            // Act
-            var imageData = pdfGenerator.DownloadImage(imageUrl);
-
-            // Assert
-            // Add assertions to validate the downloaded image data
-            Assert.IsNotNull(imageData, "DownloadImage test passed");
-        }
-        [Test]
-        public void AddWeatherData_GeneratesWeatherDataInTable()
-        {
-            // Arrange
-            var document = new Document();
-            var weatherResponse = new WeatherResponse
-            {
-                Current = new Current
+                if ((propertyName == "WeatherDescriptions" || propertyName == "Weather Description") && propertyValue is System.Collections.IList descriptionList && descriptionList.Count > 0)
                 {
-                    ObservationTime = "12:14 PM",
-                    Temperature = 13,
-
+                    valueCell = new PdfPCell(new Phrase(descriptionList[0].ToString()));
                 }
-            };
-            var pdfGenerator = new PdfGenerator();
 
-            // Act
-            PdfPTable table = pdfGenerator.AddWeatherData(weatherResponse);
-
-            // Assert
-            // Verify that the table is generated as expected
-            Assert.IsNotNull(table);
-
-            // You can add more specific assertions about the table content here
-            Assert.IsTrue(table.Rows.Count > 0);
-            Assert.AreEqual(table.NumberOfColumns, 2);
-
-            // Check if specific content is present in the table
-            // Assert on the specific content of individual cells
-            Assert.AreEqual("12:14 PM", GetCellContent(table, 0, 1)); // The cell at row 0, column 1
-            Assert.AreEqual("13", GetCellContent(table, 1, 1)); // The cell at row 1, column 1
-
-        }
-        private string GetCellContent(PdfPTable table, int row, int column)
-        {
-            PdfPCell cell = table.GetRow(row).GetCells()[column];
-
-            return cell.Phrase[0].ToString();
-        }
-
-        [Test]
-        public void AddTitle_AddsTitleToDocument()
-        {
-            // Arrange
-            var weatherResponse = new WeatherResponse
-            {
-                Location = new Location
-                {
-                    name = "New York",
-                    region = "New York",
-                    localtime = "2019-09-07 08:14"
-                }
-            };
-            var pdfGenerator = new PdfGenerator();
-            var titleParagraph = pdfGenerator.AddTitle(weatherResponse);
-
-            // Act
-            // Create a new Document and add the title paragraph
-            var document = new Document();
-            var documentStream = new MemoryStream();
-            PdfWriter writer = PdfWriter.GetInstance(document, documentStream);
-            document.Open();
-            document.Add(titleParagraph);
-            document.Close();
-
-            // Decode the binary content to a string
-            var binaryContent = documentStream.ToArray();
-            string decodedContent;
-            using (var stream = new MemoryStream(binaryContent))
-            {
-                using (var reader = new PdfReader(stream))
-                {
-                    decodedContent = Encoding.UTF8.GetString(reader.GetPageContent(1));
-                }
+                table.AddCell(nameCell);
+                table.AddCell(valueCell);
             }
 
-            // Assert
-            // Verify that the decoded document content contains expected information
-            Assert.IsTrue(decodedContent.Contains("Weather Report for New York New York"));
-            Assert.IsTrue(decodedContent.Contains("As At 2019-09-07 08:14"));
+            return table;
         }
 
-
-
-
-
-
-
+        public byte[] DownloadImage(string imageUrl)
+        {
+            using (WebClient webClient = new WebClient())
+            {
+                try
+                {
+                    return webClient.DownloadData(imageUrl);
+                }
+                catch (Exception ex)
+                {
+                    throw new PDFGeneratorExceptions("Error downloading image:", ex.Message);
+                }
+            }
+        }
     }
 }
