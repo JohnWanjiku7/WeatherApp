@@ -31,8 +31,10 @@ namespace WeatherApp.Pdf
                 PdfWriter.GetInstance(document, new FileStream(outputPath, FileMode.Create));
 
                 document.Open();
-                AddTitle(document, weatherResponse);
-                AddWeatherData(document, weatherResponse);
+                var title = AddTitle(weatherResponse);
+                document.Add(title);
+                PdfPTable table = AddWeatherData(weatherResponse);
+                document.Add(table);
                 document.Close();
 
                 return $"PDF created at: {Path.GetFullPath(outputPath)}";
@@ -43,16 +45,16 @@ namespace WeatherApp.Pdf
             }
         }
 
-        private void AddTitle(Document document, WeatherResponse weatherResponse)
+        public Paragraph AddTitle(WeatherResponse weatherResponse)
         {
             StringBuilder titleBuilder = new StringBuilder($"Weather Report for {weatherResponse.Location.name} {weatherResponse.Location.region}\nAs At {weatherResponse.Location.localtime}");
             var title = new Paragraph(titleBuilder.ToString(), new Font(Font.FontFamily.HELVETICA, 24, Font.BOLD, BaseColor.BLACK));
             title.Alignment = Element.ALIGN_CENTER;
             title.SpacingAfter = 10f;
-            document.Add(title);
+            return title; ;
         }
 
-        private void AddWeatherData(Document document, WeatherResponse weatherResponse)
+        public PdfPTable AddWeatherData(WeatherResponse weatherResponse)
         {
             PdfPTable table = new PdfPTable(2)
             {
@@ -71,17 +73,17 @@ namespace WeatherApp.Pdf
                 propertyName = attribute?.Name ?? propertyName;
 
                 PdfPCell nameCell = new PdfPCell(new Phrase(propertyName, new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD)));
-                
-                    nameCell.BackgroundColor = BaseColor.LIGHT_GRAY;
-                    nameCell.Padding = 8;
-             
+
+                nameCell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                nameCell.Padding = 8;
+
 
                 PdfPCell valueCell = new PdfPCell(new Phrase(propertyValue.ToString(), new Font(Font.FontFamily.HELVETICA, 12)));
 
 
-                    valueCell.BackgroundColor = BaseColor.WHITE;
-                    valueCell.Padding = 8;
-               
+                valueCell.BackgroundColor = BaseColor.WHITE;
+                valueCell.Padding = 8;
+
 
                 if ((propertyName == "WeatherIcons" || propertyName == "Weather icon") && propertyValue is System.Collections.IList iconList && iconList.Count > 0)
                 {
@@ -102,10 +104,10 @@ namespace WeatherApp.Pdf
                 table.AddCell(valueCell);
             }
 
-            document.Add(table);
+            return table;
         }
 
-        private byte[] DownloadImage(string imageUrl)
+        public byte[] DownloadImage(string imageUrl)
         {
             using (WebClient webClient = new WebClient())
             {
