@@ -21,10 +21,4 @@
     <ProjectReference Include="..\WeatherApp.Pdf\WeatherApp.Pdf.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
