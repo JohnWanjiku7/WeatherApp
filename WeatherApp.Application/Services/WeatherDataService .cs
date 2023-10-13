@@ -25,8 +25,6 @@ namespace WeatherApp.Application.Services
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-
-
             serviceCollection.AddSingleton<IConfiguration>(configuration);
 
             string apiKey = (configuration["WeatherApi:ApiKey"]);
@@ -48,9 +46,7 @@ namespace WeatherApp.Application.Services
                 // Send an HTTP GET request to the API
                 HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
                 response.EnsureSuccessStatusCode();
-              
-                
-                    
+                              
 
                     // Read the response content as a JSON string
                     string responseBody = await response.Content.ReadAsStringAsync();
@@ -68,8 +64,6 @@ namespace WeatherApp.Application.Services
                 {
                     // Request failed with an error status code
                     string errorMessage = $"Status code: {errorResponse.Error.Code}\nStatus info:{errorResponse.Error.Info}\nStatus info:{errorResponse.Error.Type}";
-
-                   
 
                     // Throw an exception or handle the error as needed
                     throw new WeatherDomainException($"\nWeather Data Service Error: Error Response Code", errorMessage);
