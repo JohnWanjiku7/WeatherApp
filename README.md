@@ -9,7 +9,7 @@ This project uses an API key for accessing external services. To get started, yo
    git clone https://github.com/JohnWanjiku7/WeatherApp.git
 
 2. Navigate to the project directory:
-3. Locate the `appsettings.json` file in the project directory.
+3. Locate the `appsettings.json` file in the ManagementAPI project directory.
 
 4. Open `appsettings.json` in a text editor of your choice.
 
