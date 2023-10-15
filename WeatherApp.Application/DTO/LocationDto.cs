@@ -1,6 +1,12 @@
-﻿namespace WeatherApp.Domain.Entities
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WeatherApp.Application.DTO
 {
-    public class Location
+    public class LocationDto
     {
         public string name { get; set; }
         public string country { get; set; }
