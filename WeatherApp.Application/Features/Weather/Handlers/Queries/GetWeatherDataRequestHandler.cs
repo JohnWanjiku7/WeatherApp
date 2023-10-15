@@ -19,13 +19,12 @@ namespace WeatherApp.Application.Features.Weather.Handlers.Queries
     {
         
 
-        private readonly IWriteData _writeData;
+       
         private readonly IMapper _mapper;
         private readonly IWeatherStackAPI _weatherStackAPI;
 
-        public GetWeatherDataRequestHandler(IWriteData writeData, IMapper mapper, IWeatherStackAPI weatherStackAPI)
+        public GetWeatherDataRequestHandler(IMapper mapper, IWeatherStackAPI weatherStackAPI)
         {
-            _writeData = writeData; 
             _mapper = mapper;
             _weatherStackAPI = weatherStackAPI;
         }

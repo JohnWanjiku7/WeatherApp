@@ -11,7 +11,7 @@ namespace WeatherApp.Application.Interface.Persistence
     public interface IGeneratePDF
     {
         
-        Task<bool> GeneratePdfAsync(WeatherResponseDto weatherResponseDto);
+        Task<byte[]> GeneratePdfAsync(WeatherResponseDto weatherResponseDto);
     }
 }
 

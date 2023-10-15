@@ -16,13 +16,13 @@ namespace WeatherApp.Infrastructure
        
         public static IServiceCollection ConfigureInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-           
 
-            
-            configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
-                .AddJsonFile("appsettings.json")
-                .Build();
+
+
+            //configuration = new ConfigurationBuilder()
+            //    .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
+            //    .AddJsonFile("appsettings.json")
+            //    .Build();
 
             services.AddSingleton(configuration);
             services.Configure<WeatherStackAPISettings>(configuration.GetSection("WeatherApi"));

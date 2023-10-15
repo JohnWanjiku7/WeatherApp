@@ -8,8 +8,8 @@ using WeatherApp.Application.DTO;
 
 namespace WeatherApp.Application.Features.Weather.Requests.Query
 {
-    public interface GeneratePDFRequest: IRequest
+    public class GeneratePDFRequest: IRequest<byte[]>
     {
-        public WeatherResponseDto WeatherResponseDto { get; set; }
+        public WeatherResponseDto weatherResponseDto { get; set; }
     }
 }

@@ -28,9 +28,9 @@ namespace WeatherApp.Infrastructure.WeatherStackAPIF
             string apiUrl = _WeatherStackAPiSettings.EndpointUrl;
             string apiKey = _WeatherStackAPiSettings.ApiKey;
             HttpClient _httpClient = new HttpClient();
-            try
-            {
-                //Construct the API URL with the access key and location query
+            //try
+            //{
+            //    //Construct the API URL with the access key and location query
                 string requestURl = $"{apiUrl}/current?access_key={apiKey}&query={locationName}";
 
                 // Send an HTTP GET request to the API
@@ -42,10 +42,11 @@ namespace WeatherApp.Infrastructure.WeatherStackAPIF
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 ErrorResponse errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseBody);
+                WeatherResponseDto weatherResponseDto = JsonConvert.DeserializeObject<WeatherResponseDto>(responseBody);
                 if (errorResponse.Error == null)
                 {
                     // Deserialize the JSON response into a WeatherResponse object
-                    WeatherResponseDto weatherResponseDto = JsonConvert.DeserializeObject<WeatherResponseDto>(responseBody);
+                    WeatherResponseDto weatherResponseDto2 = JsonConvert.DeserializeObject<WeatherResponseDto>(responseBody);
 
                     //Return the relevant WeatherData
                     return weatherResponseDto;
@@ -58,17 +59,17 @@ namespace WeatherApp.Infrastructure.WeatherStackAPIF
                     //Throw an exception or handle the error as needed
                     throw new WeatherDomainException($"\nWeather Data Service Error: Error Response Code", errorMessage);
                 }
-            }
-            catch (HttpRequestException ex)
-            {
-                // Handle HTTP request errors
-                throw new WeatherDomainException($"\nWeather Data Service Error: HTTP Request", ex.Message);
-            }
-            catch (JsonException ex)
-            {
-                //Handle JSON deserialization errors
-                throw new WeatherDomainException("\nWeather Data Service Error: Converting JSON", ex.Message);
-            }
+            //}
+            //catch (HttpRequestException ex)
+            //{
+            //    // Handle HTTP request errors
+            //    throw new WeatherDomainException($"\nWeather Data Service Error: HTTP Request", ex.Message);
+            //}
+            //catch (JsonException ex)
+            //{
+            //    //Handle JSON deserialization errors
+            //    throw new WeatherDomainException("\nWeather Data Service Error: Converting JSON", ex.Message);
+            //}
         }
 
 
