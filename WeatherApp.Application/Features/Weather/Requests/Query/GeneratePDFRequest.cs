@@ -8,7 +8,7 @@ using WeatherApp.Application.DTO;
 
 namespace WeatherApp.Application.Features.Weather.Requests.Query
 {
-    public  class WriteDataRequest : IRequest
+    public interface GeneratePDFRequest: IRequest
     {
         public WeatherResponseDto WeatherResponseDto { get; set; }
     }

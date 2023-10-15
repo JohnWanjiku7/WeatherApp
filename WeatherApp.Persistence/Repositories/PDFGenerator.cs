@@ -8,9 +8,9 @@ using WeatherApp.Application.Interface.Persistence;
 
 namespace WeatherApp.Persistence.Repositories
 {
-    public class WriteData : IWriteData
+    public class PDFGenerator : IGeneratePDF
     {
-        public Task<bool> WriteDataAsync(WeatherResponseDto weatherResponseDto)
+        public Task<bool> GeneratePdfAsync(WeatherResponseDto weatherResponseDto)
         {
             throw new NotImplementedException();
         }

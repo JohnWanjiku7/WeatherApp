@@ -37,45 +37,47 @@
 //            HttpClient _httpClient = new HttpClient();
 //            try
 //            {
-//                Construct the API URL with the access key and location query
+//                //Construct the API URL with the access key and location query
 //                string apiUrl = $"{_apiUrl}/current?access_key={_apiKey}&query={locationName}";
 
-//                Send an HTTP GET request to the API
+//               // Send an HTTP GET request to the API
 //                HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
 //                response.EnsureSuccessStatusCode();
 
 
-//                Read the response content as a JSON string
+//                //Read the response content as a JSON string
 //                string responseBody = await response.Content.ReadAsStringAsync();
 
 //                ErrorResponse errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseBody);
 //                if (errorResponse.Error == null)
 //                {
-//                    Deserialize the JSON response into a WeatherResponse object
+//                   // Deserialize the JSON response into a WeatherResponse object
 //                   WeatherResponseDto weatherResponse = JsonConvert.DeserializeObject<WeatherResponseDto>(responseBody);
 
-//                    Return the relevant WeatherData
+//                    //Return the relevant WeatherData
 //                    return weatherResponse;
 //                }
 //                else
 //                {
-//                    Request failed with an error status code
+//                   // Request failed with an error status code
 //                    string errorMessage = $"Status code: {errorResponse.Error.Code}\nStatus info:{errorResponse.Error.Info}\nStatus info:{errorResponse.Error.Type}";
 
-//                    Throw an exception or handle the error as needed
+//                    //Throw an exception or handle the error as needed
 //                    throw new WeatherDomainException($"\nWeather Data Service Error: Error Response Code", errorMessage);
 //                }
 //            }
 //            catch (HttpRequestException ex)
 //            {
-//                Handle HTTP request errors
+//               // Handle HTTP request errors
 //                throw new WeatherDomainException($"\nWeather Data Service Error: HTTP Request", ex.Message);
 //            }
 //            catch (JsonException ex)
 //            {
-//                Handle JSON deserialization errors
+//                //Handle JSON deserialization errors
 //                throw new WeatherDomainException("\nWeather Data Service Error: Converting JSON", ex.Message);
 //            }
+
+
 //        }
 //    }
 //}

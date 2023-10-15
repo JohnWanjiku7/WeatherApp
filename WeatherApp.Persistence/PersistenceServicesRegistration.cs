@@ -10,7 +10,7 @@ namespace WeatherApp.Persistence
     {
         public static IServiceCollection ConfigurePesistenceServices (this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IWriteData, WriteData>();
+            services.AddScoped<IGeneratePDF, PDFGenerator>();
             return services;
         }
     }
