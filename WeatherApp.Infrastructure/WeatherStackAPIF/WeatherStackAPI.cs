@@ -42,11 +42,11 @@ namespace WeatherApp.Infrastructure.WeatherStackAPIF
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 ErrorResponse errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseBody);
-                WeatherResponseDto weatherResponseDto = JsonConvert.DeserializeObject<WeatherResponseDto>(responseBody);
+                //WeatherResponseDto weatherResponseDto = JsonConvert.DeserializeObject<WeatherResponseDto>(responseBody);
                 if (errorResponse.Error == null)
                 {
                     // Deserialize the JSON response into a WeatherResponse object
-                    WeatherResponseDto weatherResponseDto2 = JsonConvert.DeserializeObject<WeatherResponseDto>(responseBody);
+                    WeatherResponseDto weatherResponseDto = JsonConvert.DeserializeObject<WeatherResponseDto>(responseBody);
 
                     //Return the relevant WeatherData
                     return weatherResponseDto;
