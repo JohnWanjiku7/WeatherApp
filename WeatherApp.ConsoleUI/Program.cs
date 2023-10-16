@@ -2,17 +2,15 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.IO;
-using System.Net.Http.Headers;
-using System.Xml.Linq;
 
 class Program
 {
     static async Task Main(string[] args)
     {
-
         while (true)
         {
             var locationName = ReadNonEmptyInput("Enter a location (e.g., 'Nairobi'): ");
+            var customFileName = ReadFileNameInput("Enter a custom file name for the PDF (or press Enter to use default): ");
 
             string apiUrl = "http://localhost:5035/PDF";
             string queryString = $"?name={Uri.EscapeDataString(locationName)}";
@@ -28,8 +26,19 @@ class Program
                     {
                         byte[] pdfBytes = await response.Content.ReadAsByteArrayAsync();
 
-                        // Save the downloaded PDF to a file or process it as needed.
-                        string pdfFilePath = "downloaded.pdf";
+                        // Determine the PDF file name
+                        string pdfFilePath;
+                        if (!string.IsNullOrWhiteSpace(customFileName))
+                        {
+                            pdfFilePath = customFileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase)
+                                ? customFileName
+                                : customFileName + ".pdf";
+                        }
+                        else
+                        {
+                            pdfFilePath = "WeatherReport.pdf";
+                        }
+
                         File.WriteAllBytes(pdfFilePath, pdfBytes);
 
                         Console.WriteLine($"PDF downloaded successfully as {pdfFilePath}");
@@ -44,14 +53,12 @@ class Program
                     Console.WriteLine($"HTTP request error: {ex.Message}");
                 }
             }
-            
+
+            if (ShouldQuit())
+            {
+                break;
+            }
         }
-        
-
-        
-        
-
-      
     }
 
     static string ReadNonEmptyInput(string prompt)
@@ -67,14 +74,8 @@ class Program
 
     static string ReadFileNameInput(string prompt)
     {
-        string fileName = ReadNonEmptyInput(prompt);
-
-        if (!fileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
-        {
-            fileName += ".pdf"; // Append ".pdf" if it's not already there
-        }
-
-        return fileName;
+        Console.Write(prompt);
+        return Console.ReadLine().Trim();
     }
 
     static bool ShouldQuit()
