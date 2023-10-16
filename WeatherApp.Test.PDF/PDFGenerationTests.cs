@@ -1,22 +1,22 @@
-using System.Text;
-using NUnit.Framework;
-using WeatherApp.Domain.Entities;
-using WeatherApp.Pdf;
-using iTextSharp.text.pdf;
 using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.Text;
+using WeatherApp.Application.DTO;
+using WeatherApp.Persistence.Repositories;
 
-namespace WeatherApp.Tests
+
+namespace WeatherApp.Test.PDF
 {
-    [TestFixture]
-    public class PdfGeneratorTests
+    public class Tests
     {
+        
         [Test]
-        public void GeneratePdf_GeneratesPdfFile()
+        public async Task GeneratePdf_GeneratesPdfFileAsync()
         {
             // Arrange
-            var weatherResponse = new WeatherResponse
+            var weatherResponse = new WeatherResponseDto
             {
-                Location = new Location
+                Location = new LocationDto
                 {
                     name = "New York",
                     country = "United States of America",
@@ -28,7 +28,7 @@ namespace WeatherApp.Tests
                     localtime_epoch = 1567844040,
                     utc_offset = "-4.0"
                 },
-                Current = new Current
+                Current = new CurrentDto
                 {
                     ObservationTime = "12:14 PM",
                     Temperature = 13,
@@ -54,14 +54,15 @@ namespace WeatherApp.Tests
                     IsDay = "Yes"
                 }
             };
+            PDFGenerator pdfGenerator = new PDFGenerator();
+            byte[] pdfContent = await pdfGenerator.GeneratePdfAsync(weatherResponse);
 
-            var fileName = "TestReport.pdf";
-            var outputPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), fileName);
-         
+
 
 
             // Assert
-            Assert.IsTrue(File.Exists(outputPath));
+            Assert.NotNull(pdfContent);
+            Assert.IsNotEmpty(pdfContent);
             // You can add more assertions here to validate the content of the generated PDF if needed
         }
 
@@ -70,7 +71,7 @@ namespace WeatherApp.Tests
         {
             // Arrange
             var imageUrl = "https://cdn.worldweatheronline.com/images/wsymbols01_png_64/wsymbol_0002_sunny_intervals.png";
-            PdfGenerator pdfGenerator = new PdfGenerator();
+            PDFGenerator pdfGenerator = new PDFGenerator();
 
             // Act
             var imageData = pdfGenerator.DownloadImage(imageUrl);
@@ -84,19 +85,19 @@ namespace WeatherApp.Tests
         {
             // Arrange
             var document = new Document();
-            var weatherResponse = new WeatherResponse
+            var weatherResponse = new WeatherResponseDto
             {
-                Current = new Current
+                Current = new CurrentDto
                 {
                     ObservationTime = "12:14 PM",
                     Temperature = 13,
 
                 }
             };
-            var pdfGenerator = new PdfGenerator();
+            var pdfGenerator = new PDFGenerator();
 
             // Act
-            PdfPTable table = pdfGenerator.AddWeatherData( weatherResponse);
+            PdfPTable table = pdfGenerator.AddWeatherData(weatherResponse);
 
             // Assert
             // Verify that the table is generated as expected
@@ -123,16 +124,16 @@ namespace WeatherApp.Tests
         public void AddTitle_AddsTitleToDocument()
         {
             // Arrange
-            var weatherResponse = new WeatherResponse
+            var weatherResponse = new WeatherResponseDto
             {
-                Location = new Location
+                Location = new LocationDto
                 {
                     name = "New York",
                     region = "New York",
                     localtime = "2019-09-07 08:14"
                 }
             };
-            var pdfGenerator = new PdfGenerator();
+            var pdfGenerator = new PDFGenerator();
             var titleParagraph = pdfGenerator.AddTitle(weatherResponse);
 
             // Act
@@ -160,11 +161,6 @@ namespace WeatherApp.Tests
             Assert.IsTrue(decodedContent.Contains("Weather Report for New York New York"));
             Assert.IsTrue(decodedContent.Contains("As At 2019-09-07 08:14"));
         }
-
-
-
-
-
 
 
     }

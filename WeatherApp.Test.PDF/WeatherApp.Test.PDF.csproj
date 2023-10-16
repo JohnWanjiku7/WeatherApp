@@ -18,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WeatherApp.Pdf\WeatherApp.Pdf.csproj" />
+    <ProjectReference Include="..\WeatherApp.Application\WeatherApp.Application.csproj" />
+    <ProjectReference Include="..\WeatherApp.Persistence\WeatherApp.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
