@@ -19,18 +19,13 @@ namespace WeatherApp.Infrastructure
 
 
 
-            //configuration = new ConfigurationBuilder()
-            //    .SetBasePath(Directory.GetParent(AppContext.BaseDirectory).FullName)
-            //    .AddJsonFile("appsettings.json")
-            //    .Build();
 
             services.AddSingleton(configuration);
             services.Configure<WeatherStackAPISettings>(configuration.GetSection("WeatherApi"));
             services.AddTransient<IWeatherStackAPI, WeatherStackAPI>();
 
 
-            //_apiKey = configuration["WeatherApi:ApiKey"] ?? throw new ArgumentNullException("ApiKey is missing in appsettings.json");
-            //_apiUrl = configuration["WeatherApi:EndpointUrl"] ?? throw new ArgumentNullException("EndpointUrl is missing in appsettings.json");
+           
 
             return services;
         }
